@@ -3,7 +3,7 @@ Progetto per estrarre descrittori degli utenti di e-learning
 
 Scrivere un programma Python che legge una lista di log anonimizzati da un file. 
 
-Ciascun elemento della lista di log è costituito dalle seguenti nove informazioni:
+Ciascun elemento della lista di log è costituito dalle seguenti otto informazioni:
 
 - Data/Ora
 - Identificativo unico dell’utente
