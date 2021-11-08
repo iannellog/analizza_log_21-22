@@ -1,4 +1,4 @@
-# analizza_log-21-22-
+# analizza_log[21-22]
 Progetto per estrarre descrittori degli utenti di e-learning
 
 Scrivere un programma Python che legge una lista di log anonimizzati da un file. 
