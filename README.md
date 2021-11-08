@@ -1,5 +1,5 @@
 # analizza_log[21-22]
-Progetto per estrarre descrittori degli utenti di e-learning
+# Progetto per estrarre descrittori degli utenti di e-learning
 
 Scrivere un programma Python che legge una lista di log anonimizzati da un file. 
 
@@ -16,7 +16,7 @@ Ciascun elemento della lista di log è costituito dalle seguenti otto informazio
 
 L'obiettivo è quello di calcolare per ogni utente un vettore di feature e salvare i dati sia in un foglio excel, sia in formato json
 
-possibili feature per ogni utente
+Possibili feature per ogni utente
 
 - numero totale di eventi
 - quante volte si è verificato ciascun evento 
