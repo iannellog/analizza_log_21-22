@@ -1,4 +1,5 @@
 # auxiliary files that should not be updated on remote repository
+indata/*
 outdata/*
 .idea
 .DS_Store
