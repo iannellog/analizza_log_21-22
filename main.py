@@ -29,4 +29,43 @@ Possibili feature per ogni utente
 - altre features a piacere
 """
 #TODO: EVERITHING
+
+import sys
+import pandas as pd
+
+DATE= 0
+USER_CODE= 1
+EVENT= 4
+
+
+
+#This function reads the json file and saves its data into a list of lists
+
+def ReadJsonFile(file):
+    try:
+        log_list = pd.read_json(file)
+        return log_list
+    except:
+        print('Could not load the file! \nThe specified file path-name does not exist!')
+        sys.exit()
+    
+
+#This function saves data onto a new json file
+
+def SaveJsonFile(file, data):
+    try: 
+        data.to_json(file)
+    except:
+        print('Something went wrong during the creation of the new file!')
+        sys.exit()
+  
+        
+
+
+
+
+jsonfile = 'indata\logs_analizza1.json' 
+log_list=ReadJsonFile(jsonfile)
+#
+SaveJsonFile(r'indata/newfile', log_list)       
 print("Task ended")
