@@ -1,5 +1,9 @@
-import argparse
-import json
+import Utils
+from Utils import convertToDate as s2d
+from Utils import convertDateToString as d2s
+import time
+
+
 """
 Json file info:
     [0] Data/Ora
@@ -25,67 +29,8 @@ Needed info for each user:
 
 FEATURE_1_NAME = 'Numero totale di eventi'
 FEATURE_2_NAME = 'Ripetizioni per evento'
-
-def initializeParser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--path",
-                        help="The input/output file path",
-                        type=str,
-                        default='indata/')
-    parser.add_argument("-i", "--input",
-                        help="The input file name, no extension",
-                        type=str,
-                        default="logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized"
-                        )
-    parser.add_argument("-e", "--extension",
-                        help="Input/output file extension, including dot (Es -> .json)",
-                        type=str,
-                        default='.json')
-    parser.add_argument("-o", "--output",
-                        help="The output file name, no extension, Default = \'output\'",
-                        type=str,
-                        default='output')
-    return parser.parse_args()
-
-
-def readJsonFile(completeFilePath):
-    try:
-        jsonFile = open(completeFilePath)
-        data = json.load(jsonFile)  # This is a list of lists
-        jsonFile.close()
-        return data
-    except OSError as e:
-        print(e)
-        exit()
-    except json.JSONDecodeError:
-        print('Error! The specified input file doesn\'t contains info in json format.')
-        exit()
-
-
-def saveJsonFile(fileName, dumpData, indent=3):
-    try:
-        file = open(fileName, 'w')
-        json.dump(dumpData, file, indent=indent)
-        file.close()
-    except OSError as e:
-        print(e)
-        exit()
-
-
-def getFilePath_InputFileName_FileExtension(args):
-    # Check if last words contains a dot
-    filePath = args.path
-    inputFileName = args.input if '.' not in args.input else args.input.split('.')[0]
-    fileExtension = args.extension if '.' not in args.input else '.' + args.input.split('.')[1]
-    pathSlices = filePath.split('/')
-    lastIndex = len(pathSlices) - 1
-    if '.' in pathSlices[lastIndex]:  # Means that the last element is a file name including extension
-        fileNameAndExtension = pathSlices[lastIndex].split('.')
-        inputFileName = fileNameAndExtension[0]
-        fileExtension = '.' + fileNameAndExtension[1]
-        del pathSlices[lastIndex]
-        filePath = ''.join([(element + '/') for element in pathSlices])
-    return filePath, inputFileName, fileExtension
+FEATURE_3_NAME = 'Data primo evento'
+FEATURE_4_NAME = 'Data ultimo evento'
 
 
 """
@@ -112,36 +57,44 @@ def extractDictionaryFromListOfLists(listOfLogs, keyValueIndex):  # keyValueInde
     return mainDict
 
 
-def extractFeature1(listOfLogs):  # Numero totale di eventi
-    result = len(listOfLogs)
-    return result
+def feature2Check(feature2, eventName):
+    if eventName.capitalize() in feature2:
+        feature2[eventName.capitalize()] += 1
+    else:
+        feature2[eventName.capitalize()] = 1
 
 
-def extractFeature2(listOfLogs):
-    result = {}
+def extractAllFeatures(listOfLogs):
+    userDictionary = {}
+    feature2 = {}
+    feature3 = s2d(listOfLogs[0][0])
+    feature4 = s2d(listOfLogs[0][0])
     for log in listOfLogs:
-        if log[3] in result:
-            result[log[3]] +=1
-        else:
-            result[log[3]] = 1
-    return result
+        feature2Check(feature2, log[3])
+        feature3 = s2d(log[0]) if s2d(log[0]) < feature3 else feature3
+        feature4 = s2d(log[0]) if s2d(log[0]) > feature4 else feature4
+
+    userDictionary[FEATURE_1_NAME] = len(listOfLogs)
+    userDictionary[FEATURE_2_NAME] = feature2
+    userDictionary[FEATURE_3_NAME] = d2s(feature3)
+    userDictionary[FEATURE_4_NAME] = d2s(feature4)
+    return userDictionary
 
 
 def extractFeatures(logDictionary):
     features = {}
     for userCode, userLogs in logDictionary.items():
-        features[userCode] = {}
-        features[userCode][FEATURE_1_NAME] = extractFeature1(userLogs)
-        features[userCode][FEATURE_2_NAME] = extractFeature2(userLogs)
+        features[userCode] = extractAllFeatures(userLogs)
     return features
 
 
-
 if __name__ == '__main__':
-    args = initializeParser()
-    basePath, inputFile, extension = getFilePath_InputFileName_FileExtension(args)
-    json = readJsonFile(basePath + inputFile + extension)
+    start = time.time()
+    args = Utils.initializeParser()
+    basePath, inputFile, extension = Utils.getFilePath_InputFileName_FileExtension(args)
+    json = Utils.readJsonFile(basePath + inputFile + extension)
     userLogDictionary = extractDictionaryFromListOfLists(json, 1)  # Using Identificativo unico dell’utente as dictionary key value
     featureDictionary = extractFeatures(userLogDictionary)
+    Utils.saveJsonFile(basePath+args.output+extension, featureDictionary)
 
-    print('end')
+    print('end after %s' %(time.time() - start))
