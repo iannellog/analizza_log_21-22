@@ -71,5 +71,5 @@ def convertToDate(dateAsString):
     return datetime.strptime(dateAsString, DATE_FORMAT)
 
 
-def convertDateToString(StringAsDate):
-    return StringAsDate.strftime(DATE_FORMAT)
+def convertDateToString(stringAsDate):
+    return stringAsDate.strftime(DATE_FORMAT)
