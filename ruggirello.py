@@ -23,6 +23,8 @@ Needed info for each user:
 
 """
 
+FEATURE_1_NAME = 'Numero totale di eventi'
+FEATURE_2_NAME = 'Ripetizioni per evento'
 
 def initializeParser():
     parser = argparse.ArgumentParser()
@@ -110,14 +112,28 @@ def extractDictionaryFromListOfLists(listOfLogs, keyValueIndex):  # keyValueInde
     return mainDict
 
 
-def extractFeature1(listOfLogs):
-    return None
+def extractFeature1(listOfLogs):  # Numero totale di eventi
+    result = len(listOfLogs)
+    return result
+
+
+def extractFeature2(listOfLogs):
+    result = {}
+    for log in listOfLogs:
+        if log[3] in result:
+            result[log[3]] +=1
+        else:
+            result[log[3]] = 1
+    return result
 
 
 def extractFeatures(logDictionary):
-    for userLogs in logDictionary:
-        userLogs['feature1'] = extractFeature1(listOfLogs)
-        pass
+    features = {}
+    for userCode, userLogs in logDictionary.items():
+        features[userCode] = {}
+        features[userCode][FEATURE_1_NAME] = extractFeature1(userLogs)
+        features[userCode][FEATURE_2_NAME] = extractFeature2(userLogs)
+    return features
 
 
 
@@ -127,3 +143,5 @@ if __name__ == '__main__':
     json = readJsonFile(basePath + inputFile + extension)
     userLogDictionary = extractDictionaryFromListOfLists(json, 1)  # Using Identificativo unico dell’utente as dictionary key value
     featureDictionary = extractFeatures(userLogDictionary)
+
+    print('end')
