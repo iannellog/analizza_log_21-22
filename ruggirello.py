@@ -110,9 +110,20 @@ def extractDictionaryFromListOfLists(listOfLogs, keyValueIndex):  # keyValueInde
     return mainDict
 
 
+def extractFeature1(listOfLogs):
+    return None
+
+
+def extractFeatures(logDictionary):
+    for userLogs in logDictionary:
+        userLogs['feature1'] = extractFeature1(listOfLogs)
+        pass
+
+
+
 if __name__ == '__main__':
     args = initializeParser()
     basePath, inputFile, extension = getFilePath_InputFileName_FileExtension(args)
     json = readJsonFile(basePath + inputFile + extension)
     userLogDictionary = extractDictionaryFromListOfLists(json, 1)  # Using Identificativo unico dell’utente as dictionary key value
-
+    featureDictionary = extractFeatures(userLogDictionary)
