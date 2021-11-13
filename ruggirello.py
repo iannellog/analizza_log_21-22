@@ -97,5 +97,4 @@ if __name__ == '__main__':
     userLogDictionary = extractDictionaryFromListOfLists(json, 1)  # Using Identificativo unico dell’utente as dictionary key value
     featureDictionary = extractFeatures(userLogDictionary)
     Utils.saveJsonFile(basePath+args.output+extension, featureDictionary)
-
-    print('end after %s' %(time.time() - start))
+    print('End after %s' %(time.time() - start))
