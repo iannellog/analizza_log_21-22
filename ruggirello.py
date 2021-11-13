@@ -31,7 +31,7 @@ FEATURE_1_NAME = 'Numero totale di eventi'
 FEATURE_2_NAME = 'Ripetizioni per evento'
 FEATURE_3_NAME = 'Data primo evento'
 FEATURE_4_NAME = 'Data ultimo evento'
-
+FEATURE_5_NAME = 'Numero di giorni tra il primo e l\'ultimo evento'
 
 """
 Info order in dictionary
@@ -78,6 +78,7 @@ def extractAllFeatures(listOfLogs):
     userDictionary[FEATURE_2_NAME] = feature2
     userDictionary[FEATURE_3_NAME] = d2s(feature3)
     userDictionary[FEATURE_4_NAME] = d2s(feature4)
+    userDictionary[FEATURE_5_NAME] = (feature4 - feature3).days
     return userDictionary
 
 
