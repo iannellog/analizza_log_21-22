@@ -105,21 +105,28 @@ def dates_of_occurences(tab_tot_occurences):
     :return: the same dictionary with all dates on which the user performs an event
     '''
     for key in tab_tot_occurences:
-        tab_tot_occurences[key]['date']=[]
+        tab_tot_occurences[key]['dates']=[]
         for log in log_list:
             data = log[0].split()
             if log[1]==key:
-                tab_tot_occurences[key]['date']+=[data[0]]
+                tab_tot_occurences[key]['dates']+=[data[0]]
     return tab_tot_occurences
-    #It can be useful for the next calculation of first date, last date etc.
+#It can be useful for the next calculation of first date, last date etc.
 
-        
+def x(tab_tot_occurences):
+    for key in tab_tot_occurences:
+        date_eventi = tab_tot_occurences[key]['dates']
+        tab_tot_occurences[key]['last_date']=date_eventi[0]
+        tab_tot_occurences[key]['first_date']=date_eventi[-1]
+    return tab_tot_occurences
+                        
 
 filein = input('insert path of the json file to analyze:')
 log_list = read_json_file(filein)
 tab_tot_occurences = tot_occurrences(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
 tab_tot_occurences = dates_of_occurences(tab_tot_occurences)
+tab_tot_occurences = x(tab_tot_occurences)
 write_json_file(tab_tot_occurences,'newfile.json', indnt=3)
 # the results will be saved in a file named newfile.json
 
