@@ -72,7 +72,7 @@ def event_occurences(log_list, tab_log_user):
     return tab_log_user  
 
         
-filein = 'indata/caso_di_test.json'
+filein = 'indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'
 log_list = read_json_file(filein)
 pos = filein.rfind('/')
 nomefile = filein[pos:]
