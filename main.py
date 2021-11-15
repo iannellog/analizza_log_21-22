@@ -72,9 +72,12 @@ def event_occurences(log_list, tab_log_user):
     return tab_log_user  
 
         
-        
-log_list = read_json_file('/Users/mariaelenacontini/Desktop/programmazione/analizza_git/analizza_log_21-22/indata/caso_di_test.json')
+filein = 'indata/caso_di_test.json'
+log_list = read_json_file(filein)
+pos = filein.rfind('/')
+nomefile = filein[pos:]
 tab_tot_occurences = tot_occ(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
 
+save_json_file('outdata/' + nomefile, tab_tot_occurences)
 print('fine')
