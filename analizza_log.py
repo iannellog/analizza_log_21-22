@@ -78,6 +78,7 @@ def tot_occurrences(log_list):
             tab_tot_occurences[(log[1])]['tot_occurences']=1
         else:
             tab_tot_occurences[log[1]]['tot_occurences']+=1
+    # TODO: resta da ordinare il dizionario rispetto alle chiavi
     return tab_tot_occurences
 
 def event_occurences(log_list, tab_tot_occurences):
@@ -86,22 +87,32 @@ def event_occurences(log_list, tab_tot_occurences):
     :param log_list: a list of logs
     :param tab_tot_occurences: dictionary of dictionary with user codes
              and total occurences per user
-    :return: the list of log and the same dictionary
-             with occurrences for each event
+    :return: the same dictionary adding the
+             occurrences for each event
     '''
     
     for log in log_list:
-        if not log[4] in tab_tot_occurences[log[1]]:
+        if log[4] not in tab_tot_occurences[log[1]]:
             tab_tot_occurences[log[1]][log[4]]=1
         else:
             tab_tot_occurences[log[1]][log[4]]+=1
+    eventi = set()
+    for user in tab_tot_occurences:
+        eventi = eventi.union(set(tab_tot_occurences[user].keys()))
+    eventi.remove('tot_occurences')
+    for user in tab_tot_occurences:
+        for e in eventi:
+            if e not in tab_tot_occurences[user]:
+                tab_tot_occurences[user][e] = 0
     return tab_tot_occurences
 
 filein = input('insert path of the json file to analyze:')
+pos = filein.rfind('/')
+nomefile = filein[pos:]
 log_list = read_json_file(filein)
 tab_tot_occurences = tot_occurrences(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
-write_json_file(tab_tot_occurences,'newfile.json', indnt=3)
+write_json_file(tab_tot_occurences,'outdata' + nomefile, indnt=3)
 # the results will be saved in a file named newfile.json
 
 print('Fine')
