@@ -79,5 +79,5 @@ nomefile = filein[pos:]
 tab_tot_occurences = tot_occ(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
 
-save_json_file('outdata/' + nomefile, tab_tot_occurences)
+save_json_file('output/' + nomefile, tab_tot_occurences)
 print('fine')
