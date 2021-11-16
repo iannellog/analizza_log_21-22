@@ -18,7 +18,7 @@ Indirizzo IP
 
 import json
 import sys
-
+from datetime import datetime
 # questo sottoprogramma legge il file json e salva i dati in una lista di liste
 
 def read_json_file(file):
@@ -68,9 +68,27 @@ def event_occurences(log_list, tab_log_user):
         for e in eventi:
             if e not in tab_log_user[user]:
                 tab_log_user[user][e] = 0
-        
     return tab_log_user  
 
+def access(log_list):
+    tab_time = {}
+    for log in log_list:
+        if not log[1] in tab_time:
+            tab_time[(log[1])] = {}
+            d1 = datetime.strptime(log[0], "%d/%m/%Y %H:%M")
+            tab_time[(log[1])]['first access'] = d1
+            tab_time[(log[1])]['last access'] = d1
+        else:
+            d1 = datetime.strptime(log[0], "%d/%m/%Y %H:%M")
+            if tab_time[(log[1])]['first access'] > d1:
+                tab_time[(log[1])]['first access'] = d1
+            if tab_time[(log[1])]['last access'] < d1:
+                tab_time[(log[1])]['last access'] = d1
+    return tab_time
+        
+            
+                
+            
         
 filein = 'indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'
 log_list = read_json_file(filein)
@@ -78,6 +96,9 @@ pos = filein.rfind('/')
 nomefile = filein[pos:]
 tab_tot_occurences = tot_occ(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
+tab_access= access(log_list)
 
-save_json_file('output/' + nomefile, tab_tot_occurences)
+save_json_file('output/occorrenze.json' , tab_tot_occurences)
+# TODO (non funziona): save_json_file('output/accessi.json', tab_access)
+
 print('fine')
