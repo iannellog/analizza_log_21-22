@@ -75,7 +75,7 @@ def event_occurences(log_list, tab_log_user):
 # sottoprogramma mostra una tabella che indica il primo e l'ultimo accesso di 
 # ciascun utente
 
-def access(log_list):
+def access(log_list,tab_log_user):
     tab_time = {}
     for log in log_list:
         if not log[1] in tab_time:
@@ -89,10 +89,17 @@ def access(log_list):
                 tab_time[(log[1])]['first access'] = d1
             if tab_time[(log[1])]['last access'] < d1:
                 tab_time[(log[1])]['last access'] = d1
-    return tab_time
+    for log[1] in tab_time:
+        tab_log_user[(log[1])] = {**tab_log_user[(log[1])] , **tab_time[(log[1])]}
+    return tab_log_user
         
-            
-                
+def dist_access(log_list,tab_log_user):
+    for log in log_list:
+        for log[1] in tab_log_user:
+            d1 = tab_log_user[(log[1])]['first access']
+            d2 = tab_log_user[(log[1])]['last access']
+            tab_log_user[(log[1])]['days between first-last access'] = abs((d2 - d1).days)
+    return tab_log_user
             
         
 filein = 'indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'
@@ -104,9 +111,10 @@ nomefile = filein[pos:]
 
 tab_tot_occurences = tot_occ(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
-tab_access= access(log_list)
+tab_tot_occurences = access(log_list,tab_tot_occurences)
+tab_tot_occurences = dist_access(log_list, tab_tot_occurences)
 
-save_json_file('output/occorrenze.json' , tab_tot_occurences)
-# TODO (non funziona): save_json_file('output/accessi.json', tab_access)
+# TODO : salvare tabella anche se ci sono delle date. Attualmente non salva
+#save_json_file('output/tabella_info_log.json', tab_tot_occurences)
 
 print('fine')
