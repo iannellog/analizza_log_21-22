@@ -53,6 +53,8 @@ def tot_occ(log_list):
             tab_log_user[log[1]]['tot_occ']+=1
     return tab_log_user
 
+# sottoprogramma che mostra per ogni utente quante volte compie ogni evento
+
 def event_occurences(log_list, tab_log_user):
     
     for log in log_list:
@@ -69,6 +71,9 @@ def event_occurences(log_list, tab_log_user):
             if e not in tab_log_user[user]:
                 tab_log_user[user][e] = 0
     return tab_log_user  
+
+# sottoprogramma mostra una tabella che indica il primo e l'ultimo accesso di 
+# ciascun utente
 
 def access(log_list):
     tab_time = {}
@@ -92,8 +97,11 @@ def access(log_list):
         
 filein = 'indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'
 log_list = read_json_file(filein)
+
+# identifico con nomefile il nome del file che sto leggendo
 pos = filein.rfind('/')
 nomefile = filein[pos:]
+
 tab_tot_occurences = tot_occ(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
 tab_access= access(log_list)
