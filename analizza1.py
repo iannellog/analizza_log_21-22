@@ -32,34 +32,28 @@ df
 
 #creo un DataFrame con il file json"
 
-
-
 #indicizzo i dati "
 df.columns = ['DATA', 'MATRICOLA', 'CORSO', 'COMPONENTE','EVENTO','DESCRIZIONE','ORIGINE','INDIRIZZO']
 
-
 df.columns
 
+#creo un nuvo dataframe prendendo le series MATRICOLA e EVENTO e separo gli eventi
+df.eventi=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
 
-
-
-
-df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
-#questa mi restituisce direttamente un dataframe
-
-df3.columns = ['EVENTI COMPIUTI'] #indicizzo la colonna
+#indicizzo la colonna
+df.eventi.columns = ['EVENTI COMPIUTI'] 
 
 #divido gli eventi in più colonne usando il separatore |
-df3=df3['EVENTI COMPIUTI'].str.split('|', expand=True)
+df.eventi=df.eventi['EVENTI COMPIUTI'].str.split('|', expand=True)
 
 #df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)}) 
-#questa mi restituisce direttamente un dataframe
+# mi restituisce direttamente un dataframe
 
 
 
 
 #quante volte si è verificato ciascun evento  per ogni matricola 
-eventi_utente=df3.apply(pd.Series.value_counts, axis=1).fillna(0)
+eventi_utente=df.eventi.apply(pd.Series.value_counts, axis=1).fillna(0)
 
 
 
@@ -73,7 +67,7 @@ eventi_utente.insert(0, "somma_tot", eventi_utente.sum(axis=1), allow_duplicates
  
 df['DATA']=pd.to_datetime(df['DATA'],format="%d/%m/%Y %H:%M")
 
-# creo dataframe massimo e minimo evento per utente
+
 massimo=max(df['DATA'])
 minimo=min(df['DATA'])
 
