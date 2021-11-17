@@ -79,7 +79,7 @@ def tot_occurrences(log_list):
         else:
             tab_tot_occurences[log[1]]['tot_occurences']+=1
     # TODO: resta da ordinare il dizionario rispetto alle chiavi
-    return tab_tot_occurences
+    return dict(sorted(tab_tot_occurences.items()))
 
 def event_occurences(log_list, tab_tot_occurences):
     '''
