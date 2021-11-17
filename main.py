@@ -66,6 +66,7 @@ def SaveJsonFile(file, data):
 
 jsonfile = 'indata\logs_analizza1.json' 
 log_list=ReadJsonFile(jsonfile)
-#
+df = pd.DataFrame(log_list)
+print(df)
 SaveJsonFile(r'indata/newfile', log_list)       
 print("Task ended")
