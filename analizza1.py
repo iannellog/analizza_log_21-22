@@ -44,16 +44,15 @@ df.columns
 
 
 
-df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
-#questa mi restituisce direttamente un dataframe
+#creo un nuvo dataframe prendendo le series MATRICOLA e EVENTO e separo gli eventi
+df.eventi=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
 
-df3.columns = ['EVENTI COMPIUTI'] #indicizzo la colonna
+#indicizzo la colonna
+df.eventi.columns = ['EVENTI COMPIUTI'] 
 
 #divido gli eventi in più colonne usando il separatore |
-df3=df3['EVENTI COMPIUTI'].str.split('|', expand=True)
+df.eventi=df.eventi['EVENTI COMPIUTI'].str.split('|', expand=True)
 
-#df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)}) 
-#questa mi restituisce direttamente un dataframe
 
 
 
