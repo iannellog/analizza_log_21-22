@@ -20,26 +20,21 @@ L'obiettivo è quello di calcolare per ogni utente un vettore di feature e salva
 
 Possibili feature per ogni utente
 
-- numero totale di eventi
-- quante volte si è verificato ciascun evento 
-- data primo evento
-- data ultimo evento
-- numero di giorni tra il primo e l'ultimo evento
-- media e varianza del numero eventi in una settimana (da lunedi' a domenica)
+- numero totale di eventi per utente (done)
+- quante volte si è verificato ciascun evento (done)
+- data primo evento(done)
+- data ultimo evento(done)
+- numero di giorni tra il primo e l'ultimo evento(done)
 - altre features a piacere
 """
-#TODO: EVERITHING
-
+#TODO: Add more features
 import sys
 import pandas as pd
-
-DATE= 0
-USER_CODE= 1
-EVENT= 4
+from datetime import datetime
 
 
 
-#This function reads the json file and saves its data into a list of lists
+#This function reads the json file and saves its data into a list of lists (using pandas)
 
 def ReadJsonFile(file):
     try:
@@ -50,7 +45,7 @@ def ReadJsonFile(file):
         sys.exit()
     
 
-#This function saves data onto a new json file
+#This function saves data onto a new json file (using pandas)
 
 def SaveJsonFile(file, data):
     try: 
@@ -59,14 +54,58 @@ def SaveJsonFile(file, data):
         print('Something went wrong during the creation of the new file!')
         sys.exit()
   
-        
+#TODO: The real file
+jsonfile = 'indata\logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'  
+
+#TODO: Fix parsing so everyone can try with a smaller file (using head i can take only the first few logs)
+#TODO: Fake file with only the first few logs for simplicity
+#jsonfile = 'indata\logs_analizza1.json' 
+log_list=ReadJsonFile(jsonfile) #log_list is alerady a DataFrame
+
+#Rename the columns for readability
+log_list.rename(columns={ 0:'DATE', 1: 'USER_ID', 3: 'EVENT_TYPE'}, inplace=True)
 
 
+#Splitting the DataFrame of logs into groups based on user_id 
+df_per_user = log_list.groupby(log_list.USER_ID)
+
+#Creating a range for the loop. The max value is the biggest ID 
+users= range(1, log_list.USER_ID.max()+1) 
+
+#Counting the number of events a user has participated to(the number of logs with his ID)
 
 
-jsonfile = 'indata\logs_analizza1.json' 
-log_list=ReadJsonFile(jsonfile)
-df = pd.DataFrame(log_list)
-print(df)
-SaveJsonFile(r'indata/newfile', log_list)       
+#This function receives 2 strings that represent 2 dates and calculates the distance
+def CalculateDateDistance (str1, str2):
+     date0= pd.to_datetime(str1,format="%d/%m/%Y %H:%M")
+     date1= pd.to_datetime(str2,format="%d/%m/%Y %H:%M")
+     dist= date1 - date0
+     return dist
+
+#TODO: Try to fix formatting for the date_distance. The result is in sec but it would be nice to keep the TimeDelta format
+features=[]   
+for i in users:
+    #Taking as current the DataFrame that contains only the logs of the i-th user
+    current= df_per_user.get_group(i)
+    
+    event_participations= current['USER_ID'].value_counts()
+    event_counts= current['EVENT_TYPE'].value_counts()
+    print(event_counts, '\n\n')
+    
+    first_event_date= current['DATE'].min()
+    
+    last_event_date= current['DATE'].max()
+    
+    dates_distance= CalculateDateDistance(first_event_date, last_event_date)
+    print(dates_distance, '\n\n')
+    feature_obj=[i, event_participations, event_counts, first_event_date, last_event_date, dates_distance]
+    features.append(feature_obj)
+
+#TODO: Divide in some way lines and columns of the result file (the dataframe shape should be ok)
+#Converting the list of features into a DataFrame
+user_features= pd.DataFrame(features)
+user_features.rename(columns={ 0:'USER_ID', 1: 'Event participation', 2: 'Event type count', 
+                              3: 'First event date', 4:'Last event date', 5:'Date distance first and last event'},
+                     inplace=True)
+SaveJsonFile(r'indata/User_features.json', user_features)       
 print("Task ended")
