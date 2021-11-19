@@ -28,7 +28,6 @@ import pandas as pd
 
 df = pd.read_json('/Users/francyvadi/Desktop/cartella senza titolo 3/analizza_log_21-22/indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json')
 
-df
 
 #creo un DataFrame con il file json"
 
@@ -36,7 +35,6 @@ df
 #indicizzo i dati "
 df.columns = ['DATA', 'MATRICOLA', 'CORSO', 'COMPONENTE','EVENTO','DESCRIZIONE','ORIGINE','INDIRIZZO']
 
-df.columns
 
 #creo un nuvo dataframe prendendo le series MATRICOLA e EVENTO e separo gli eventi
 df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
