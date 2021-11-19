@@ -38,22 +38,18 @@ df.columns = ['DATA', 'MATRICOLA', 'CORSO', 'COMPONENTE','EVENTO','DESCRIZIONE',
 df.columns
 
 #creo un nuvo dataframe prendendo le series MATRICOLA e EVENTO e separo gli eventi
-df.eventi=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
+df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)})
 
 #indicizzo la colonna
-df.eventi.columns = ['EVENTI COMPIUTI'] 
+df3.columns = ['EVENTI COMPIUTI'] 
 
 #divido gli eventi in più colonne usando il separatore |
-df.eventi=df.eventi['EVENTI COMPIUTI'].str.split('|', expand=True)
-
-#df3=df.groupby('MATRICOLA').agg({ 'EVENTO': lambda x:  "|".join(x)}) 
-# mi restituisce direttamente un dataframe
-
+df3=df3['EVENTI COMPIUTI'].str.split('|', expand=True)
 
 
 
 #quante volte si è verificato ciascun evento  per ogni matricola 
-eventi_utente=df.eventi.apply(pd.Series.value_counts, axis=1).fillna(0)
+eventi_utente=df3.apply(pd.Series.value_counts, axis=1).fillna(0)
 
 
 
