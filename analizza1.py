@@ -21,6 +21,7 @@ per utente
 
 #!pip install pandas
 
+
 import pandas as pd
 
 
@@ -28,9 +29,7 @@ import pandas as pd
 
 df = pd.read_json('/Users/francyvadi/Desktop/cartella senza titolo 3/analizza_log_21-22/indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json')
 
-
 #creo un DataFrame con il file json"
-
 
 #indicizzo i dati "
 df.columns = ['DATA', 'MATRICOLA', 'CORSO', 'COMPONENTE','EVENTO','DESCRIZIONE','ORIGINE','INDIRIZZO']
@@ -62,9 +61,7 @@ eventi_utente.insert(0, "somma_tot", eventi_utente.sum(axis=1), allow_duplicates
  
 df['DATA']=pd.to_datetime(df['DATA'],format="%d/%m/%Y %H:%M")
 
-
 # creo dataframe massimo e minimo evento per utente
-
 massimo=max(df['DATA'])
 minimo=min(df['DATA'])
 
