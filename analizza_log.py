@@ -26,7 +26,7 @@ def fatal_error(message):
     :return: None
     """
     print(message)
-   # exit()
+    exit()
 
 
 def read_json_file(file_name):
@@ -78,8 +78,8 @@ def tot_occurrences(log_list):
             tab_tot_occurences[(log[1])]['tot_occurences']=1
         else:
             tab_tot_occurences[log[1]]['tot_occurences']+=1
-    # TODO: resta da ordinare il dizionario rispetto alle chiavi
     return dict(sorted(tab_tot_occurences.items()))
+
 
 def event_occurences(log_list, tab_tot_occurences):
     '''
@@ -106,14 +106,40 @@ def event_occurences(log_list, tab_tot_occurences):
                 tab_tot_occurences[user][e] = 0
     return tab_tot_occurences
 
+def dates_of_occurences(tab_tot_occurences):
+    '''
+    calculates all dates on which the user performs an event
+    :param tab_tot_occurences: dictionary of dictionary with user codes,
+             total occurences per user and occurences for each event
+    :return: the same dictionary with all dates on which the user performs an event
+    '''
+    dates = {}
+    for user in tab_tot_occurences:
+        dates[user] = []
+        for log in log_list:
+            data = log[0].split()
+            if log[1] == user:
+                dates[user] += [data[0]]
+    return dates
+#It can be useful for the next calculation of first date, last date etc.
+
+
+def x(tab_tot_occurences, dates):
+    for user in tab_tot_occurences:
+        date_eventi = dates[user]
+        tab_tot_occurences[user]['last_date'] = date_eventi[0]
+        tab_tot_occurences[user]['first_date'] = date_eventi[-1]
+    return tab_tot_occurences
+                        
+
 filein = input('insert path of the json file to analyze:')
 pos = filein.rfind('/')
 nomefile = filein[pos:]
 log_list = read_json_file(filein)
 tab_tot_occurences = tot_occurrences(log_list)
 tab_tot_occurences = event_occurences(log_list, tab_tot_occurences)
-write_json_file(tab_tot_occurences,'outdata' + nomefile, indnt=3)
-# the results will be saved in a file named newfile.json
+dates = dates_of_occurences(tab_tot_occurences)
+tab_tot_occurences = x(tab_tot_occurences, dates)
+write_json_file(tab_tot_occurences, 'outdata' + nomefile, indnt=3)
 
 print('Fine')
-    
