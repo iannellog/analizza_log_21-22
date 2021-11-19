@@ -32,6 +32,7 @@ df
 
 #creo un DataFrame con il file json"
 
+
 #indicizzo i dati "
 df.columns = ['DATA', 'MATRICOLA', 'CORSO', 'COMPONENTE','EVENTO','DESCRIZIONE','ORIGINE','INDIRIZZO']
 
@@ -63,6 +64,8 @@ eventi_utente.insert(0, "somma_tot", eventi_utente.sum(axis=1), allow_duplicates
  
 df['DATA']=pd.to_datetime(df['DATA'],format="%d/%m/%Y %H:%M")
 
+
+# creo dataframe massimo e minimo evento per utente
 
 massimo=max(df['DATA'])
 minimo=min(df['DATA'])
