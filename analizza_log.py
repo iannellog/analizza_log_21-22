@@ -2,7 +2,7 @@
 """
 Created on Thu Nov 11 23:41:04 2021
 
-@author: carpy
+@author: carpy, Maria elena Contini
 
 Program to read a list of anonymized logs from a file 
 and calculate a feature vector for each user by saving the data in json format
