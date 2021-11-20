@@ -18,6 +18,7 @@ Expected json data: a list of log with the following fields:
 """
 
 import json
+from datetime import datetime
 
 
 def fatal_error(message):
@@ -121,16 +122,30 @@ def get_dates_of_occurrences(tab_tot_occurrences):
         for log in log_list:
             data = log[0].split()
             if log[1] == user:
-                dates[user] += [data[0]]
+                dates[user] += [datetime.strptime(log[0], "%d/%m/%Y %H:%M")]
     return dates
 # It can be useful for the next calculation of first date, last date etc.
 
 
 def add_first_last_dates(tab_tot_occurrences, dates):
+    """
+    For each user in tab_tot_occurrences add the first and last dates
+    of events, and
+    :param tab_tot_occurrences: dictionary to be updated
+    :param dates: for each user gives the list of dates of events
+    :return: tab_tot_occurrences updated
+    """
     for user in tab_tot_occurrences:
-        date_eventi = dates[user]
-        tab_tot_occurrences[user]['last_date'] = date_eventi[0]
-        tab_tot_occurrences[user]['first_date'] = date_eventi[-1]
+        first_date = dates[user][0]
+        last_date = dates[user][0]
+        for d in dates[user]:
+            if d < first_date:
+                first_date = d
+            elif last_date < d:
+                last_date = d
+        tab_tot_occurrences[user]['first_date'] = first_date.strftime("%d/%m/%Y %H:%M")
+        tab_tot_occurrences[user]['last_date'] = last_date.strftime("%d/%m/%Y %H:%M")
+        tab_tot_occurrences[user]['days between first-last access'] = (last_date - first_date).days
     return tab_tot_occurrences
                         
 
