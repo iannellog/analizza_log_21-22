@@ -1,12 +1,8 @@
 """
 Created on Wed Nov 10 12:52:57 2021
-
 @author: Massimo Capurro Lladò
-
 Scrivere un programma Python che legge una lista di log anonimizzati da un file. 
-
 Ciascun elemento della lista di log è costituito dalle seguenti otto informazioni:
-
 - Data/Ora
 - Identificativo unico dell’utente
 - Contesto dell’evento
@@ -15,11 +11,8 @@ Ciascun elemento della lista di log è costituito dalle seguenti otto informazio
 - Descrizione
 - Origine 
 - Indirizzo IP
-
 L'obiettivo è quello di calcolare per ogni utente un vettore di feature e salvare i dati sia in un foglio excel, sia in formato json
-
 Possibili feature per ogni utente
-
 - numero totale di eventi per utente (done)
 - quante volte si è verificato ciascun evento (done)
 - data primo evento(done)
@@ -60,10 +53,11 @@ def SaveExcelFile(file, data, data2):
     try: 
         writer = pd.ExcelWriter(file)
         data.to_excel(writer, 'USER FEATURES')
-
+        
         for n, df in enumerate(data2):
-            df.to_excel(writer,'Events for User%s' % n)
-
+            df.columns= ['COUNT', 1,2,3,4,5,6]
+            df.drop(df.columns[[1,2,3,4,5,6]], axis=1, inplace=True)
+            df.to_excel(writer,'Events for User %s' %(n+1))
         writer.save()
     except:
         print('Something went wrong during the creation of the new Excel file!')
@@ -119,7 +113,6 @@ def EventTypeCount (log_list):
         event_counts= current.groupby('EVENT_TYPE').count()
         event_type_count.append(event_counts)
     return event_type_count
-
 
 #TODO: The real file
 jsonfile = 'indata\logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'  
