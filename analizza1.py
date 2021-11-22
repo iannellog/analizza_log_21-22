@@ -22,7 +22,16 @@ per utente
 #!pip install pandas
 
 
+
+import sys
 import pandas as pd
+
+def SaveJsonFile(file, data):
+    try: 
+        data.to_json(file, indent= 3, orient='table')
+    except:
+        print('Something went wrong during the creation of the new Json file!')
+        sys.exit()
 
 #creo un DataFrame con il file json"
 df = pd.read_json('/Users/francyvadi/Desktop/analizza_log_21-22/indata/logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json')
@@ -55,40 +64,41 @@ eventi_utente.insert(0, "somma_tot", eventi_utente.sum(axis=1), allow_duplicates
 
 
 
-#nel database originario specifico la divisione della dta
-df['DATA']=pd.to_datetime(df['DATA'],format="%d/%m/%Y %H:%M")
+# #nel database originario specifico la divisione della dta
+# df['DATA']=pd.to_datetime(df['DATA'],format="%d/%m/%Y %H:%M")
 
-# creo un dict nel quale è presente massimo e minimo evento 
-massimo=max(df['DATA'])
-minimo=min(df['DATA'])
+# # creo un dict nel quale è presente massimo e minimo evento 
+# massimo=max(df['DATA'])
+# minimo=min(df['DATA'])
 
-data= {
-    'minima_data,': [massimo], 
-    'massima_data': [minimo]
+# data= {
+#     'minima_data,': [massimo], 
+#     'massima_data': [minimo]
     
 
-}
-date_max_min = pd.DataFrame(data, index=['1','50'])
+# }
+# date_max_min = pd.DataFrame(data, index=['1','50'])
 
-date_max_min
+# date_max_min
 
-#numero di giorni tra il primo e l'ultimo evanto 
-delta=massimo - minimo
-print(delta.days)
+# #numero di giorni tra il primo e l'ultimo evanto 
+# delta=massimo - minimo
+# print(delta.days)
 
  
 
      
-#intoduco un dict con i giorni della settimana 
-dweek = {0:'Lunedi', 1:'Martedi', 2: 'Mercoledi', 3:'Giovedi', 4:'Venerdi', 5:'Sabato', 6:'Domenica'}
+# #intoduco un dict con i giorni della settimana 
+# dweek = {0:'Lunedi', 1:'Martedi', 2: 'Mercoledi', 3:'Giovedi', 4:'Venerdi', 5:'Sabato', 6:'Domenica'}
 
 
-#uso weekday() per associare ad ogni data il giorno della settimana corrispondente
-df['DATA'][0].weekday()
-dweek[df['DATA'][0].weekday()]
+# #uso weekday() per associare ad ogni data il giorno della settimana corrispondente
+# df['DATA'][0].weekday()
+# dweek[df['DATA'][0].weekday()]
 
-#aggiungo una colonna che mi dice il giorno  di ogni data 
-df['Giorno'] = pd.Series(dweek[pd.datetime.weekday(df['DATA'][i])] for i in range(len(df)))
+# #aggiungo una colonna che mi dice il giorno  di ogni data 
+# df['Giorno'] = pd.Series(dweek[pd.datetime.weekday(df['DATA'][i])] for i in range(len(df)))
 
 
 
+SaveJsonFile(r'indata/prova_eventi', eventi_utente)
