@@ -1,7 +1,10 @@
 """
 Created on Wed Nov 10 12:52:57 2021
+
 @author: Massimo Capurro Lladò
+
 Scrivere un programma Python che legge una lista di log anonimizzati da un file. 
+
 Ciascun elemento della lista di log è costituito dalle seguenti otto informazioni:
 - Data/Ora
 - Identificativo unico dell’utente
@@ -11,57 +14,21 @@ Ciascun elemento della lista di log è costituito dalle seguenti otto informazio
 - Descrizione
 - Origine 
 - Indirizzo IP
+
 L'obiettivo è quello di calcolare per ogni utente un vettore di feature e salvare i dati sia in un foglio excel, sia in formato json
 Possibili feature per ogni utente
 - numero totale di eventi per utente (done)
 - quante volte si è verificato ciascun evento (done)
-- data primo evento(done)
-- data ultimo evento(done)
-- numero di giorni tra il primo e l'ultimo evento(done)
+- data primo evento (done)
+- data ultimo evento (done)
+- numero di giorni tra il primo e l'ultimo evento (done)
 - altre features a piacere
 """
 
 #TODO: Add more features
-import sys
 import pandas as pd
+import Utils
 
-
-#This function reads the json file and saves its data into a DataFrame 
-
-def ReadJsonFile(file):
-    try:
-        log_list = pd.read_json(file)
-        return log_list
-    except:
-        print('Could not load the file! \nThe specified file path-name does not exist!')
-        sys.exit()
-    
-
-#This function saves data onto a new json file 
-#FIXME: Some values get badly converted
-def SaveJsonFile(file, data):
-    try: 
-        data.to_json(file, indent= 3, orient='table')
-    except:
-        print('Something went wrong during the creation of the new Json file!')
-        sys.exit()
-  
-
-#Fuction that saves data onto a new Excel file (Using multi-sheet for the Event type counter) 
-
-def SaveExcelFile(file, data, data2):
-    try: 
-        writer = pd.ExcelWriter(file)
-        data.to_excel(writer, 'USER FEATURES')
-        
-        for n, df in enumerate(data2):
-            df.columns= ['COUNT', 1,2,3,4,5,6]
-            df.drop(df.columns[[1,2,3,4,5,6]], axis=1, inplace=True)
-            df.to_excel(writer,'Events for User %s' %(n+1))
-        writer.save()
-    except:
-        print('Something went wrong during the creation of the new Excel file!')
-        sys.exit()
 
         
 #Function that calculates the distance between 2 dates
@@ -115,18 +82,21 @@ def EventTypeCount (log_list):
     return event_type_count
 
 #TODO: The real file
-jsonfile = 'indata\logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'  
+#jsonfile = 'indata\logs_Fondamenti di informatica [20-21]_20211103-1845_anonymized.json'  
 #TODO: Fake file with only the first few logs for simplicity
-#jsonfile = 'indata\logs_analizza1.json'  
+#jsonfile = 'indata\logs_analizza1.json' 
 
+ 
+args = Utils.initializeParser()
+basePath, inputFile, extension = Utils.getFilePath_InputFileName_FileExtension(args)
+log_list = Utils.ReadJsonFile(basePath + inputFile + extension)
 
-log_list=ReadJsonFile(jsonfile)
 log_list.rename(columns={ 0:'DATE', 1: 'USER_ID', 3: 'EVENT_TYPE'}, inplace=True)
-
 user_features= UserFeatures(log_list)
 event_type_count= EventTypeCount(log_list)
 
-SaveJsonFile(r'indata/User_features.json', user_features)   
-SaveExcelFile(r'indata/User_features1.xlsx', user_features, event_type_count) 
-  
+Utils.SaveJsonFile(basePath+args.output+extension, user_features)
+Utils.SaveExcelFile(r'indata/User_features.xlsx', user_features, event_type_count)
+
+
 print("Task ended")
