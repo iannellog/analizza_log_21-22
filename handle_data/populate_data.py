@@ -2,6 +2,15 @@ from utils import datetime as dt, constants
 
 
 def populate_data_frame_output(data_frame_output, data_in, extra=False):
+    """
+    insert in data_frame_output features for each user in data_in.
+    Features: num of events, times for each type of event, firs date, last date
+        and difference in days between them, mean and variance of num events in weeks
+    :param data_frame_output: pandas.DataFrame that will be populated
+    :param data_in: pandas.DataFrame read from json
+    :param extra: bool that indicates if extra features should be added
+    :return None
+    """
     print('\n============= Extract features =============')
     print('Extracting values...')
 
@@ -15,6 +24,7 @@ def populate_data_frame_output(data_frame_output, data_in, extra=False):
         [get_events_rep(data_in[data_in[constants.ID_USER] == user], events) for user in data_frame_output.index]
 
     # extracting first date, last date and days between them
+    # zip permits to wrap in tuple multiple values for list comprehension
     data_frame_output[constants.FIRST_DATETIME], data_frame_output[constants.LAST_DATETIME], \
         data_frame_output[constants.DAYS_BTW_FIRST_LAST] = \
         zip(*(get_first_last_date_and_diff_user(data_in[data_in[constants.ID_USER] == user][constants.DATETIME])
