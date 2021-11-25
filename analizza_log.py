@@ -19,7 +19,14 @@ Expected json data: a list of log with the following fields:
 
 from utils import read_json_file, write_json_file
 from statistics import compute_statistics
+
 import sys
+import pandas as pd
+
+
+def dict2df(tab):
+    df = tab
+    return df
 
 
 if __name__ == "__main__":
