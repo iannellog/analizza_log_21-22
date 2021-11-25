@@ -25,7 +25,13 @@ import pandas as pd
 
 
 def dict2df(tab):
-    df = tab
+    keys = list(tab.keys())
+    events = [eventID for eventID in tab[keys[0]].keys()]
+    df = pd.DataFrame(index=keys, columns=['Utente'] + events)
+    for k in keys:
+        df.at[k, 'Utente'] = k
+        for e in events:
+            df.at[k, e] = tab[k][e]
     return df
 
 
@@ -50,5 +56,8 @@ if __name__ == "__main__":
 
     # save the table
     write_json_file(statistics_tab, 'outdata' + filename, indnt=3)
+
+    statistics_df = dict2df(statistics_tab)
+    statistics_df.to_excel('outdata' + filename + '.xlsx')
 
     print('Fine')
