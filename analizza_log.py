@@ -19,6 +19,7 @@ Expected json data: a list of log with the following fields:
 
 import json
 from datetime import datetime
+import sys
 
 
 def fatal_error(message):
@@ -148,8 +149,11 @@ def add_first_last_dates(tab_tot_occurrences, dates):
         tab_tot_occurrences[user]['days between first-last access'] = (last_date - first_date).days
     return tab_tot_occurrences
                         
-
-filein = input('insert path of the json file to analyze:')
+if len(sys.argv) > 1:
+    filein = sys.argv[1]
+else:
+    #filein = input('insert path of the json file to analyze:')
+    filein = 'indata/test_simple.json'
 pos = filein.rfind('/')
 nomefile = filein[pos:]
 log_list = read_json_file(filein)
