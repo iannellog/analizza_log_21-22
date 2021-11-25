@@ -154,9 +154,9 @@ pos = filein.rfind('/')
 nomefile = filein[pos:]
 log_list = read_json_file(filein)
 tab_tot_occurrences = add_tot_occurrences(log_list)
-tab_tot_occurrences = add_event_occurrences(log_list, tab_tot_occurrences)
 dates = get_dates_of_occurrences(tab_tot_occurrences)
 tab_tot_occurrences = add_first_last_dates(tab_tot_occurrences, dates)
+tab_tot_occurrences = add_event_occurrences(log_list, tab_tot_occurrences)
 write_json_file(tab_tot_occurrences, 'outdata' + nomefile, indnt=3)
 
 print('Fine')
