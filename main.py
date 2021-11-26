@@ -58,7 +58,7 @@ def UserFeatures (log_list):
         #Feature 4: Get the distance between first and last event date of the user
         dates_distance= CalculateDateDistance(first_event_date, last_event_date)
         print(dates_distance, '\n\n')
-        feature_obj=[i, event_participations[0], first_event_date, last_event_date, dates_distance]
+        feature_obj=[i, event_participations[0], first_event_date, last_event_date, str(dates_distance)]
         features.append(feature_obj)
     #Converting the list of features into a DataFrame
     user_features= pd.DataFrame(features)
