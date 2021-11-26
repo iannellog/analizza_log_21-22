@@ -1,3 +1,5 @@
+import datetime
+
 import Utils
 from Utils import convertToDate as s2d
 from Utils import convertDateToString as d2s
@@ -64,6 +66,10 @@ def feature2Check(feature2, eventName):
         feature2[eventName.capitalize()] = 1
 
 
+def get_date_at_start_of_the_day(date):
+    return datetime.date(date.year, date.month, date.day)
+
+
 def extractAllFeatures(listOfLogs):
     userDictionary = {}
     feature2 = {}
@@ -78,6 +84,8 @@ def extractAllFeatures(listOfLogs):
     userDictionary[FEATURE_2_NAME] = feature2
     userDictionary[FEATURE_3_NAME] = d2s(feature3)
     userDictionary[FEATURE_4_NAME] = d2s(feature4)
+    feature4 = get_date_at_start_of_the_day(feature4)
+    feature3 = get_date_at_start_of_the_day(feature3)
     userDictionary[FEATURE_5_NAME] = (feature4 - feature3).days
     return userDictionary
 
