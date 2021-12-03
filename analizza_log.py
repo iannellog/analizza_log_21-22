@@ -17,21 +17,10 @@ Expected json data: a list of log with the following fields:
 - Indirizzo IP
 """
 
-from utils import JSONReader, JSONWriter
+from utils import FeatureWriter, JSONReader
 from statistics import statistics
 
 import sys
-import pandas as pd
-
-
-def dict2df(tab):
-    keys = list(tab.keys())
-    events = [eventID for eventID in tab[keys[0]].keys()]
-    df = pd.DataFrame(index=keys, columns=events)
-    for k in keys:
-        for e in events:
-            df.at[k, e] = tab[k][e]
-    return df
 
 
 if __name__ == "__main__":
@@ -42,9 +31,16 @@ if __name__ == "__main__":
     else:
         filein = 'indata/test_simple.json'
 
+    if len(sys.argv) > 2:
+        suffix = sys.argv[2]
+    else:
+        suffix = 'xlsx'
+
     # build output file name from input file name
     pos = filein.rfind('/')
     filename = filein[pos:]
+    pos = filename.rfind('.')
+    filename = filename[:pos]
 
     # read input file in a list of logs
     reader = JSONReader()
@@ -55,10 +51,7 @@ if __name__ == "__main__":
     statistics_tab = my_statistics.compute_all(log_list)
 
     # save the table
-    writer = JSONWriter()
-    writer.write_file(statistics_tab, 'outdata' + filename, indnt=3)
-
-    df = dict2df(statistics_tab)
-    df.to_excel('outdata/ptova.xlsx')
+    writer = FeatureWriter.create_instance(suffix)
+    writer.write_file(statistics_tab, 'outdata' + filename + '.' + suffix)
 
     print('Fine')
