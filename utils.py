@@ -5,6 +5,18 @@ by Giulio Iannello
 """
 
 import json
+from abc import ABC, abstractmethod
+import pandas as pd
+
+
+def dict2df(tab):
+    keys = list(tab.keys())
+    events = [eventID for eventID in tab[keys[0]].keys()]
+    df = pd.DataFrame(index=keys, columns=events)
+    for k in keys:
+        for e in events:
+            df.at[k, e] = tab[k][e]
+    return df
 
 
 def fatal_error(message):
@@ -40,7 +52,29 @@ class JSONReader():
             fatal_error(f'*** json error *** {message}')
 
 
-class JSONWriter():
+class FeatureWriter(ABC):
+    """
+    abstract class
+    """
+
+    @abstractmethod
+    def write_file(self, data, file_name, **kwargs):
+        """
+        abstract method
+        """
+        pass
+
+    @staticmethod
+    def create_instance(suffix):
+        if suffix == 'json':
+            return JSONWriter()
+        elif suffix == 'xlsx':
+            return ExcelWriter()
+        else:
+            raise ValueError('unknown file type')
+
+
+class JSONWriter(FeatureWriter):
 
     def __init__(self):
         pass
@@ -51,7 +85,7 @@ class JSONWriter():
         manage exceptions
         :param data: python object to be written to file
         :param file_name: file to be written
-        :param indent:
+        :param indnt:
         :return: None
         """
         try:
@@ -61,4 +95,13 @@ class JSONWriter():
         except OSError as message:
             fatal_error(message)
 
+
+class ExcelWriter(FeatureWriter):
+
+    def __init__(self):
+        pass
+
+    def write_file(self, data, file_name):
+        df = dict2df(data)
+        df.to_excel(file_name)
 
