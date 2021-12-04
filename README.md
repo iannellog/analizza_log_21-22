@@ -23,6 +23,6 @@ Possibili feature per ogni utente
 - data primo evento
 - data ultimo evento
 - numero di giorni tra il primo e l'ultimo evento
-- media e varianza del numero eventi in una settimana (da lunedi' a domenica)
+- media e deviazione standard del numero eventi in una settimana (da lunedi' a domenica)
 - altre features a piacere
 
