@@ -102,6 +102,12 @@ class ExcelWriter(FeatureWriter):
         pass
 
     def write_file(self, data, file_name):
+        """
+        write data to a excel file
+        :param data: python object to be written to file
+        :param file_name: file to be written
+        :return: None
+        """
         df = dict2df(data)
         df.to_excel(file_name)
 
