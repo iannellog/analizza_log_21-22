@@ -54,7 +54,4 @@ if __name__ == "__main__":
     writer = FeatureWriter.create_instance(suffix)
     writer.write_file(statistics_tab, 'outdata' + filename + '.' + suffix)
 
-    statistics_df = dict2df(statistics_tab)
-    statistics_df.to_excel('outdata' + filename + '.xlsx')
-
     print('Fine')
