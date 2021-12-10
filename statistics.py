@@ -6,12 +6,55 @@ by Giulio Iannello
 
 from datetime import datetime
 from numpy import mean, std
+from abc import ABC, abstractmethod
 
 
-class statistics():
+class abstract_statistics(ABC):
 
     def __init__(self):
         pass
+
+    @abstractmethod
+    def compute_all(self, log_list):
+        """
+        compute statistics and returns a table with users as rows and features as columns
+        :param log_list:
+        :return:
+        """
+        pass
+
+    @staticmethod
+    def create_instance(stat_type=None):
+        """
+        Factory to create the chain providing statistics from a log list
+        :param stat_type: None|"normalized"
+        :return: object providing statistics
+        """
+        if stat_type.__eq__(None):
+            return statistics()
+        elif stat_type == "normalized":
+            return statistics_normalization(statistics())
+        else:
+            raise ValueError("unknown statistics type")
+
+
+class statistics_normalization(abstract_statistics):
+
+    def __init__(self, decorated_obj):
+        super().__init__()
+        self.decorated = decorated_obj
+
+    def compute_all(self, log_list):
+        non_normalized_tab = self.decorated.compute_all(log_list)
+        # opera la normalizzazione di non_normalized_tab
+        normalized_tab = non_normalized_tab
+        return normalized_tab
+
+
+class statistics(abstract_statistics):
+
+    def __init__(self):
+        super().__init__()
 
     def add_tot_occurrences(self, log_list):
         """

@@ -18,7 +18,7 @@ Expected json data: a list of log with the following fields:
 """
 
 from utils import FeatureWriter, JSONReader
-from statistics import statistics
+from statistics import abstract_statistics
 
 import sys
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     log_list = reader.read_file(filein)
 
     # compute statistics and add them to a table which keys are user IDs
-    my_statistics = statistics()
+    my_statistics = abstract_statistics.create_instance("normalized")
     statistics_tab = my_statistics.compute_all(log_list)
 
     # save the table
